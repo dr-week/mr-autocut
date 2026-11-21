@@ -4,10 +4,12 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "jsx": "react-jsx",
     "strict": true,
     "noEmit": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@zuari/signals": ["./vendor/fast-framework/packages/signals/src/index.ts"]
+    }
   },
   "include": ["src"]
 }

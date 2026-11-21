@@ -1,12 +1,13 @@
 [project]
 name = "mr-autocut-backend"
-version = "0.1.0"
-description = "MR-AutoCut engine: advanced auto-cut, 9:16 reel builder, and FilmCraft CLI bridge"
+version = "0.2.0"
+description = "MR-AutoCut engine: sequence-adaptive auto-cut, multi-track reel builder, AI Director, and FilmCraft CLI bridge"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
     "pydantic>=2.9.0",
+    "python-multipart>=0.0.12",
 ]
 
 [project.optional-dependencies]
