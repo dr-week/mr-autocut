@@ -8,6 +8,7 @@ export default defineConfig({
       '@zuari/signals': path.resolve(__dirname, 'vendor/fast-framework/packages/signals/src/index.ts'),
       '@zuari/tokens': path.resolve(__dirname, 'vendor/fast-framework/packages/tokens/src/index.ts'),
       '@zuari/presets': path.resolve(__dirname, 'vendor/fast-framework/packages/presets/src/index.ts'),
+      '@zuari/glyphs': path.resolve(__dirname, 'vendor/fast-framework/packages/glyphs/src/index.ts'),
       '@zuari/recipes': path.resolve(__dirname, 'vendor/fast-framework/packages/recipes'),
     },
   },

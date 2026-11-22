@@ -12,3 +12,4 @@ export * from './viewport';
 export * from './vfx_sigs';
 export * from './run_vfx';
 export * from './samples';
+export * from './glyphs';

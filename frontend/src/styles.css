@@ -52,8 +52,11 @@ body {
 .logo-mark {
   width: 30px; height: 30px; border-radius: 9px;
   background: linear-gradient(135deg, var(--accent), var(--indigo));
-  display: grid; place-items: center; color: #05070b; font-weight: 800; font-size: 12px;
+  display: grid; place-items: center; color: #05070b; padding: 5px;
 }
+.logo-mark svg { width: 100%; height: 100%; }
+.zg { display: inline-block; vertical-align: -2px; flex-shrink: 0; }
+.rail-tab, .btn-primary, .btn-ghost, .upload-btn, .drag-grip { display: inline-flex; align-items: center; gap: 5px; }
 .brand h1 { font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
 .brand span { display: block; font-size: 10px; color: var(--muted); }
 

@@ -1,5 +1,5 @@
 import { effect } from '@zuari/signals';
-import { updateSig } from '../../state';
+import { ic, updateSig } from '../../state';
 
 export const RELEASES_URL = 'https://github.com/dr-week/mr-autocut/releases/latest';
 
@@ -9,6 +9,6 @@ export function bindUpdatePill(el: HTMLElement) {
   effect(() => {
     const u = updateSig.value, show = Boolean(u?.update_available && u.latest_version);
     pill.hidden = !show;
-    pill.textContent = show ? `⬆ v${u!.latest_version.replace(/^v/, '')} available` : '';
+    pill.innerHTML = show ? `${ic('download', 12)} v${u!.latest_version.replace(/^v/, '')}` : '';
   });
 }
