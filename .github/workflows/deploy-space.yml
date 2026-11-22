@@ -1,0 +1,40 @@
+name: Deploy Backend to Hugging Face Space
+
+on:
+  push:
+    branches: ["main"]
+    paths: ["backend/**", ".github/workflows/deploy-space.yml"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_SPACE: ${{ vars.HF_SPACE || 'dr-week/mr-autocut' }}
+    steps:
+      - name: Check HF_TOKEN
+        id: gate
+        run: |
+          if [ -z "$HF_TOKEN" ]; then echo "HF_TOKEN not set — skipping deploy."; echo "go=false" >> "$GITHUB_OUTPUT"; else echo "go=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.go == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.go == 'true'
+        with:
+          python-version: "3.11"
+      - name: Push backend/ to Space
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          pip install -q huggingface_hub
+          printf -- '---\ntitle: MR-AutoCut\nemoji: 🎬\nsdk: docker\napp_port: 7860\n---\n' > backend/README.md
+          python - <<'EOF'
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          sid = os.environ["HF_SPACE"]
+          api.create_repo(sid, repo_type="space", space_sdk="docker", exist_ok=True)
+          api.upload_folder(repo_id=sid, repo_type="space", folder_path="backend",
+                            ignore_patterns=[".venv/*", ".cache/*", "training_logs/*", "**/__pycache__/*", ".pytest_cache/*"])
+          print(f"Deployed https://huggingface.co/spaces/{sid}")
+          EOF

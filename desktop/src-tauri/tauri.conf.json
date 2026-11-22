@@ -1,24 +1,34 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "MR-AutoCut",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "identifier": "com.drweek.mrautocut",
   "build": {
-    "frontendDist": "../../frontend/dist"
+    "frontendDist": "../../frontend/dist",
+    "beforeBuildCommand": "npm --prefix ../frontend ci --no-audit --no-fund && npm --prefix ../frontend run build"
   },
   "app": {
     "windows": [
       {
         "title": "MR-AutoCut · FilmCraft Dock",
-        "width": 380,
+        "width": 1280,
         "height": 820,
-        "resizable": true,
-        "alwaysOnTop": true
+        "resizable": true
       }
-    ]
+    ],
+    "security": { "csp": null }
   },
   "bundle": {
     "active": true,
-    "targets": "all"
+    "targets": ["nsis", "msi"],
+    "createUpdaterArtifacts": true,
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdFMTIwQzk3NTJCOTFGQ0IKUldUTEg3bFNsd3dTZnMwMzE0amNhdnlOVjN4UjJLazkyS3dWT280bmw4Y3creUI4U21WaDlLb1YK",
+      "endpoints": ["https://github.com/dr-week/mr-autocut/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
+    }
   }
 }

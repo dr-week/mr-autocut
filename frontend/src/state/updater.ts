@@ -1,8 +1,6 @@
-import { signal } from '@zuari/signals';
 import { apiUrl } from './api';
-
-export interface UpdateInfo { current_version: string; latest_version: string; update_available: boolean; release_url: string; }
-export const updateSig = signal<UpdateInfo | null>(null);
+import { updateSig } from './update_sig';
+export * from './update_sig';
 
 export async function checkUpdates() {
   try {

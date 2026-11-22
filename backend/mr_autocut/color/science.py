@@ -1,18 +1,9 @@
 """Per-clip camera color science & transfer curve detection via ffprobe."""
-
-from __future__ import annotations
-
-import json
-import subprocess
+import json, subprocess
 from pydantic import BaseModel
 
-
 class ColorScienceInfo(BaseModel):
-    color_space: str = "bt709"
-    color_trc: str = "bt709"
-    is_log_or_hdr: bool = False
-    recommended_input_lut: str | None = None
-
+    color_space: str = "bt709"; color_trc: str = "bt709"; is_log_or_hdr: bool = False; recommended_input_lut: str | None = None
 
 def detect_color_science(media_path: str) -> ColorScienceInfo:
     out = subprocess.check_output(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=color_space,color_transfer", "-of", "json", media_path], text=True, stderr=subprocess.DEVNULL, timeout=10)

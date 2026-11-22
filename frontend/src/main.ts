@@ -1,21 +1,6 @@
 import './styles.css';
-import { effect } from '@zuari/signals';
-import { initStudio, layoutSig, toastSig } from './state';
-import { createTopBar } from './sections/topbar';
-import { createCommandPalette } from './sections/palette';
-import { createInspectorPanel } from './sections/inspector';
-import { createMonitorPanel } from './sections/monitor';
-import { createBridgePanel } from './sections/bridge';
-import { createTimelinePanel } from './sections/timeline';
+import { initStudio } from './state';
+import { createShell } from './shell';
 
-const shell = document.createElement('div');
-const grid = document.createElement('div');
-grid.className = 'studio-grid';
-grid.append(createInspectorPanel(), createMonitorPanel(), createBridgePanel());
-const toast = document.createElement('div');
-toast.className = 'toast';
-effect(() => { shell.className = `studio-shell mode-${layoutSig.value}`; });
-effect(() => { toast.textContent = toastSig.value; toast.classList.toggle('visible', Boolean(toastSig.value)); });
-shell.append(createTopBar(), grid, createTimelinePanel(), createCommandPalette(), toast);
-document.getElementById('app')!.appendChild(shell);
+document.getElementById('app')!.appendChild(createShell());
 initStudio();

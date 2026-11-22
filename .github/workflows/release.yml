@@ -1,4 +1,4 @@
-name: Release — Windows Bundle & Auto-Update
+name: Release — Windows Installer & Auto-Update
 
 on:
   push:
@@ -10,23 +10,29 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Build Zuari Frontend
-        working-directory: frontend
-        run: npm install --no-audit --no-fund && npm run build
-      - name: Package Windows Release Zip
-        run: |
-          mkdir -p dist_pkg
-          cp -r backend installer frontend/dist README.md dist_pkg/
-          (cd dist_pkg && zip -r ../MR-AutoCut-windows.zip .)
-          sha256sum MR-AutoCut-windows.zip > SHA256SUMS.txt
-      - uses: softprops/action-gh-release@v2
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
         with:
-          files: |
-            MR-AutoCut-windows.zip
-            SHA256SUMS.txt
+          workspaces: desktop/src-tauri -> target
+      - name: Install Tauri CLI
+        working-directory: desktop
+        run: npm install --no-audit --no-fund
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: desktop
+          tagName: ${{ github.ref_name }}
+          releaseName: "MR-AutoCut ${{ github.ref_name }}"
+          releaseBody: "Windows installer (.exe NSIS / .msi). Installed apps auto-update via latest.json."
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true

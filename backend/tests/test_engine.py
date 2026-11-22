@@ -252,3 +252,18 @@ def test_github_auto_updater_check(monkeypatch):
     res = client.get("/api/updater/check").json()
     assert res["update_available"] is True
     assert res["latest_version"] == "0.3.0"
+
+
+def test_youtube_fx_refs_blend_and_filmcraft_overlay_jsonl(tmp_path: Path):
+    from mr_autocut.youtube_fx import apply_overlay_blend, pick_blend
+
+    refs = client.get("/api/youtube-fx/refs").json()
+    assert len(refs["refs"]) == 7
+    assert pick_blend("light_leak")["filmcraft"] == "Screen"
+    assert pick_blend("paper_texture")["filmcraft"] == "Multiply"
+
+    base = _make_synthetic_clip(tmp_path / "base.mp4")
+    ov = _make_synthetic_clip(tmp_path / "ov.mp4")
+    blended = apply_overlay_blend(str(base), str(ov), "screen", 0.85, 640, 360)
+    assert Path(blended).is_file()
+

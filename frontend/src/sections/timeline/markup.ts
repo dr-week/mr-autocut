@@ -1,0 +1,1 @@
+export const TIMELINE_MARKUP = `<div class="timeline-head"><span class="section-label" style="margin:0;">120 FPS Waveform Timeline</span><span class="hint" style="margin:0;">Click cuts to toggle · logs to Colab</span></div><div class="timeline-track"><div class="waveform-bars" id="t-w"></div><div class="cut-layer" id="t-c"></div><div class="playhead" id="t-h"></div></div>`;

@@ -1,10 +1,12 @@
 [package]
 name = "mr-autocut-desktop"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-
-[dependencies]
-tauri = { version = "2", features = [] }
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"

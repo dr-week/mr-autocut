@@ -10,4 +10,4 @@ echo "=== 2. Frontend Typecheck & Build ==="
 (cd "$ROOT/frontend" && npm run build)
 
 echo "=== 3. Micro-Modular LOC Audit ==="
-python3 "$ROOT/scripts/check_loc.py" || true
+python3 "$ROOT/scripts/check_loc.py"

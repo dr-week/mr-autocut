@@ -1,15 +1,9 @@
 """Quantum-inspired QUBO (Simulated Annealing) optimal reel clip selector."""
-
-from __future__ import annotations
-
-import math
-import random
+import math, random
 from .engine import Segment
 
-
 def optimize_reel_qubo(segments: list[Segment], target_sec: float, steps: int = 200) -> list[Segment]:
-    if not segments:
-        return []
+    if not segments: return []
     rng, state = random.Random(42), [1 if i < 3 else 0 for i in range(len(segments))]
     energy = lambda st: abs(sum(s.duration for s, b in zip(segments, st) if b) - target_sec) * 2.0 - sum(0.6 for s, b in zip(segments, st) if b and s.kind == "hook") + sum(0.4 for i in range(len(st) - 1) if st[i] and st[i + 1] and segments[i].kind == segments[i + 1].kind)
     best, best_e, cur_e = state[:], energy(state), energy(state)

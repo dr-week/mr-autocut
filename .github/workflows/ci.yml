@@ -12,6 +12,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install FFmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install filmcraft-cli v0.20.1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$HOME/.local/bin"; tmp=$(mktemp -d)
+          gh release download v0.20.1 -R storytold/filmcraft -p filmcraft-0.20.1-linux-x86_64.tar.gz -D "$tmp" --clobber \
+            || curl -fsSL -o "$tmp/filmcraft-0.20.1-linux-x86_64.tar.gz" https://github.com/storytold/filmcraft/releases/download/v0.20.1/filmcraft-0.20.1-linux-x86_64.tar.gz \
+            || { echo "filmcraft-cli unavailable; dependent tests will skip"; exit 0; }
+          tar -xzf "$tmp"/filmcraft-0.20.1-linux-x86_64.tar.gz -C "$tmp"
+          cp -f "$(find "$tmp" -type f -name filmcraft-cli | head -n 1)" "$HOME/.local/bin/filmcraft-cli"
+          chmod +x "$HOME/.local/bin/filmcraft-cli"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/filmcraft-cli" --version || true
       - uses: astral-sh/setup-uv@v4
       - name: Backend Pytest
         working-directory: backend
@@ -22,3 +35,5 @@ jobs:
       - name: Frontend Build
         working-directory: frontend
         run: npm install --no-audit --no-fund && npm run build
+      - name: Micro-Modular LOC Guard
+        run: python3 scripts/check_loc.py
