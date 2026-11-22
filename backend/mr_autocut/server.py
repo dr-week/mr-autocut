@@ -183,3 +183,18 @@ def color_cube(grade: dict, title: str = "MR-AutoCut Grade", size: int = 17):
     from fastapi.responses import PlainTextResponse
     from .color import ColorGrade, generate_cube_lut
     return PlainTextResponse(generate_cube_lut(ColorGrade(**grade), title=title, size=size), media_type="text/plain")
+
+
+@app.post("/api/reel/optimize")
+def reel_optimize(segments: list[dict], target_sec: float = 15.0):
+    from .engine import Segment
+    from .qubo import optimize_reel_qubo
+    chosen = optimize_reel_qubo([Segment(**s) for s in segments], target_sec=target_sec)
+    return {"target_sec": target_sec, "actual_sec": round(sum(s.duration for s in chosen), 2), "segments": chosen}
+
+
+@app.post("/api/color/match")
+def color_match(clip_ids: list[int], reference_seconds: float = 0.5):
+    import json
+    lines = [json.dumps({"id": "lumetri.applyMatch", "params": {"clip": cid, "referenceTime": int(reference_seconds * 254016000000), "faceDetection": True}}) for cid in clip_ids]
+    return {"command_count": len(lines), "jsonl": "\n".join(lines) + "\n"}

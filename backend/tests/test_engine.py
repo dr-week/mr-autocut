@@ -183,3 +183,17 @@ def test_color_science_auto_balance_and_cube_lut(tmp_path: Path):
     cube = client.post("/api/color/cube", json={"grade": res["grade"]})
     assert cube.status_code == 200
     assert "LUT_3D_SIZE 17" in cube.text
+
+
+def test_qubo_reel_optimizer_and_filmcraft_color_match():
+    segs = [
+        {"index": i + 1, "start": i * 3.0, "end": (i + 1) * 3.0, "duration": 3.0, "kind": "hook" if i == 0 else ("broll" if i % 2 else "speech"), "enabled": True}
+        for i in range(6)
+    ]
+    opt = client.post("/api/reel/optimize", params={"target_sec": 9.0}, json=segs).json()
+    assert opt["actual_sec"] == 9.0
+    assert len(opt["segments"]) == 3
+
+    match = client.post("/api/color/match", params={"reference_seconds": 1.0}, json=[101, 102, 103]).json()
+    assert match["command_count"] == 3
+    assert "lumetri.applyMatch" in match["jsonl"]
