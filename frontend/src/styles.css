@@ -105,6 +105,22 @@ body {
   flex-direction: column;
   gap: 8px;
 }
+.panel.inspector {
+  background: linear-gradient(155deg, oklch(24% 0.055 195 / 0.82), oklch(15% 0.02 250 / 0.88));
+  border-color: oklch(75% 0.18 190 / 0.32);
+}
+.panel.monitor {
+  background: linear-gradient(160deg, oklch(23% 0.055 255 / 0.82), oklch(14% 0.02 270 / 0.9));
+  border-color: oklch(72% 0.16 245 / 0.34);
+}
+.panel.bridge {
+  background: linear-gradient(155deg, oklch(23% 0.05 160 / 0.8), oklch(15% 0.02 220 / 0.88));
+  border-color: oklch(78% 0.17 160 / 0.32);
+}
+.panel.timeline-panel {
+  background: linear-gradient(175deg, oklch(23% 0.05 75 / 0.78), oklch(14% 0.02 255 / 0.9));
+  border-color: oklch(82% 0.16 80 / 0.32);
+}
 
 /* Draggable / Collapsible / Floatable Filmora Card Headers */
 .card-bar {

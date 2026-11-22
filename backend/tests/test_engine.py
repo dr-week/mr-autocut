@@ -297,5 +297,10 @@ def test_vfx_prompt_script_movements_and_filmora_package(tmp_path: Path):
     lan = client.get("/api/lan/info").json()
     assert "android_remote_url" in lan and len(lan["extensions"]) == 3
 
+    brf = client.post("/api/brief/blueprint", params={"brief": "NEON CAR LAUNCH\nFAST DRIFT DROP\nOUTRO LOGO", "duration": 12.0}).json()
+    assert brf["hook_text"] == "NEON CAR LAUNCH"
+    assert len(brf["timeline"]) >= 3 and "CLIENT BRIEF:" in brf["ai_prompt"]
+
+
 
 
