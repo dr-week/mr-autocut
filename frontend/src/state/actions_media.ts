@@ -14,11 +14,19 @@ export function setLayout(mode: LayoutMode) {
   localStorage.setItem('mr_layout', mode);
 }
 
+import { activeApiSig, apiUrl } from './api';
+import { analyzeFileInBrowser } from './browser_audio';
+import { silenceDbSig } from './controls';
+
 export async function uploadMediaFile(file: File) {
   busySig.value = true;
-  const form = new FormData();
-  form.append('file', file);
-  const res = await fetch('/api/media/upload', { method: 'POST', body: form });
+  if (activeApiSig.value === 'static-demo') {
+    const { info, segments } = await analyzeFileInBrowser(file, silenceDbSig.value);
+    mediaSig.value = info; waveformSig.value = info.waveform; sourceDurationSig.value = info.duration; segmentsSig.value = segments;
+    busySig.value = false; return notify(`Browser Auto-Cut: ${segments.length} cuts (${info.duration}s)`);
+  }
+  const form = new FormData(); form.append('file', file);
+  const res = await fetch(apiUrl('/api/media/upload'), { method: 'POST', body: form });
   busySig.value = false;
   if (!res.ok) return notify('Upload failed');
   const info: MediaInfo = await res.json();

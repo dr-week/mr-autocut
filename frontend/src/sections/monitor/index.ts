@@ -10,7 +10,7 @@ export function createMonitorPanel(): HTMLElement {
   el.querySelector<HTMLButtonElement>('#b-pl')!.onclick = () => { if (mediaSig.value) video.paused ? video.play() : video.pause(); };
   video.ontimeupdate = () => (playheadSig.value = video.currentTime);
   effect(() => { const s = sequenceSig.value; el.querySelector<HTMLElement>('#vp-f')!.style.aspectRatio = `${s.width}/${s.height}`; el.querySelector('#vp-r')!.textContent = `${s.width}×${s.height}`; });
-  effect(() => { const m = mediaSig.value; video.style.display = m ? 'block' : 'none'; el.querySelector<HTMLElement>('#vp-e')!.style.display = m ? 'none' : 'flex'; if (m) video.src = `/api/media/${m.media_id}/stream`; });
+  effect(() => { const m = mediaSig.value; video.style.display = m ? 'block' : 'none'; el.querySelector<HTMLElement>('#vp-e')!.style.display = m ? 'none' : 'flex'; if (m) video.src = m.media_id === 'browser' ? m.path : `/api/media/${m.media_id}/stream`; });
   effect(() => { el.querySelector<HTMLElement>('#vp-s')!.style.display = safeZonesSig.value ? 'block' : 'none'; el.querySelector('#vp-c')!.textContent = captionTextSig.value; el.querySelector('#vp-t')!.textContent = `${playheadSig.value.toFixed(2)}s / ${sourceDurationSig.value.toFixed(2)}s`; });
   return el;
 }
