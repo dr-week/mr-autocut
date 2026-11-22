@@ -1,0 +1,154 @@
+import { describe, it, expect } from 'vitest';
+import { applyThemePreset, createThemeEngine, generateCssVariables, THEME_PRESETS } from './index.js';
+
+describe('@zuari/tokens Modular Plug-and-Play Theme Engine', () => {
+  it('initializes with default preset and detects light/dark modes', () => {
+    const el = document.createElement('div');
+    const engine = createThemeEngine({ initialTheme: 'paper', targetElement: el });
+
+    expect(engine.themeName.value).toBe('paper');
+    expect(engine.isDark.value).toBe(false);
+    expect(el.getAttribute('data-zuari-theme')).toBe('paper');
+    expect(el.getAttribute('data-theme-mode')).toBe('light');
+
+    // Switch to dark theme
+    engine.setTheme('midnight');
+    expect(engine.themeName.value).toBe('midnight');
+    expect(engine.isDark.value).toBe(true);
+    expect(el.getAttribute('data-zuari-theme')).toBe('midnight');
+    expect(el.getAttribute('data-theme-mode')).toBe('dark');
+
+    engine.destroy();
+  });
+
+  it('allows registering custom theme Lego bricks by composing presets', () => {
+    const el = document.createElement('div');
+    const engine = createThemeEngine({ targetElement: el });
+
+    // Register a custom "cyber-neon" theme brick
+    engine.registerTheme('cyber-neon', 'midnight', {
+      colors: {
+        accent: 'oklch(85% 0.3 140)',
+        surface: 'oklch(12% 0.04 280 / 0.9)'
+      },
+      radii: {
+        squircle: '20px'
+      }
+    });
+
+    engine.setTheme('cyber-neon');
+    expect(engine.themeName.value).toBe('cyber-neon');
+    expect(el.style.getPropertyValue('--nova-color-accent')).toBe('oklch(85% 0.3 140)');
+    expect(el.style.getPropertyValue('--nova-radius-squircle')).toBe('20px');
+
+    engine.destroy();
+  });
+
+  it('applies scoped theme bricks to isolated subtrees without polluting root', () => {
+    const engine = createThemeEngine();
+    const card = document.createElement('div');
+
+    const unscope = engine.applyScopedBricks(card, {
+      colors: {
+        accent: 'oklch(70% 0.25 350)'
+      },
+      elevations: {
+        float: '0 8px 30px rgba(0,0,0,0.5)'
+      }
+    });
+
+    expect(card.style.getPropertyValue('--nova-color-accent')).toBe('oklch(70% 0.25 350)');
+    expect(card.style.getPropertyValue('--zuari-elevation-float')).toBe('0 8px 30px rgba(0,0,0,0.5)');
+
+    // Teardown restores previous
+    unscope();
+    expect(card.style.getPropertyValue('--nova-color-accent')).toBe('');
+
+    engine.destroy();
+  });
+
+  it('skips undefined optional colors when generating and applying theme variables', () => {
+    const theme = {
+      ...THEME_PRESETS.paper,
+      colors: {
+        ...THEME_PRESETS.paper.colors,
+        accentSecondary: undefined,
+        accentGlow: undefined,
+        onAccent: undefined
+      }
+    };
+    const generatedCss = generateCssVariables(theme);
+    const element = document.createElement('div');
+
+    applyThemePreset(theme, element);
+
+    expect(generatedCss).not.toContain('--nova-color-accent-secondary');
+    expect(generatedCss).not.toContain('--nova-color-accent-glow');
+    expect(generatedCss).not.toContain('--nova-color-on-accent');
+    expect(element.style.getPropertyValue('--nova-color-accent-secondary')).toBe('');
+    expect(element.style.getPropertyValue('--nova-color-accent-glow')).toBe('');
+    expect(element.style.getPropertyValue('--nova-color-on-accent')).toBe('');
+  });
+
+  it('skips undefined optical optional colors and glass block when omitted', () => {
+    const theme = {
+      ...THEME_PRESETS.paper,
+      colors: {
+        ...THEME_PRESETS.paper.colors,
+        surfaceFloating: undefined,
+        specularHighlight: undefined
+      },
+      glass: undefined
+    };
+    const generatedCss = generateCssVariables(theme);
+    const element = document.createElement('div');
+
+    applyThemePreset(theme, element);
+
+    expect(generatedCss).not.toContain('--nova-color-surface-floating');
+    expect(generatedCss).not.toContain('--nova-color-specular-highlight');
+    expect(generatedCss).not.toContain('--zuari-glass-blur');
+    expect(generatedCss).not.toContain('--zuari-glass-saturation');
+    expect(generatedCss).not.toContain('--zuari-glass-rim-shadow');
+    expect(element.style.getPropertyValue('--nova-color-surface-floating')).toBe('');
+    expect(element.style.getPropertyValue('--nova-color-specular-highlight')).toBe('');
+    expect(element.style.getPropertyValue('--zuari-glass-blur')).toBe('');
+    expect(element.style.getPropertyValue('--zuari-glass-saturation')).toBe('');
+    expect(element.style.getPropertyValue('--zuari-glass-rim-shadow')).toBe('');
+  });
+
+  it('generates and applies liquid glass optical tokens across built-in themes', () => {
+    for (const [name, preset] of Object.entries(THEME_PRESETS)) {
+      const generatedCss = generateCssVariables(preset);
+      const element = document.createElement('div');
+      applyThemePreset(preset, element);
+
+      expect(preset.colors.surfaceFloating, `${name} surfaceFloating`).toBeDefined();
+      expect(preset.colors.specularHighlight, `${name} specularHighlight`).toBeDefined();
+      expect(preset.glass, `${name} glass`).toBeDefined();
+
+      expect(generatedCss).toContain(`--nova-color-surface-floating: ${preset.colors.surfaceFloating};`);
+      expect(generatedCss).toContain(`--nova-color-specular-highlight: ${preset.colors.specularHighlight};`);
+      expect(generatedCss).toContain(`--zuari-glass-blur: ${preset.glass!.blur};`);
+      expect(generatedCss).toContain(`--zuari-glass-saturation: ${preset.glass!.saturation};`);
+      expect(generatedCss).toContain(`--zuari-glass-rim-shadow: ${preset.glass!.rimShadow};`);
+
+      expect(element.style.getPropertyValue('--nova-color-surface-floating')).toBe(preset.colors.surfaceFloating);
+      expect(element.style.getPropertyValue('--nova-color-specular-highlight')).toBe(preset.colors.specularHighlight);
+      expect(element.style.getPropertyValue('--zuari-glass-blur')).toBe(preset.glass!.blur);
+      expect(element.style.getPropertyValue('--zuari-glass-saturation')).toBe(preset.glass!.saturation);
+      expect(element.style.getPropertyValue('--zuari-glass-rim-shadow')).toBe(preset.glass!.rimShadow);
+    }
+
+    expect(THEME_PRESETS.studio.glass).toEqual({
+      blur: '26px',
+      saturation: '165%',
+      rimShadow: 'inset 0 1px 0 oklch(100% 0 0 / 0.65)'
+    });
+    expect(THEME_PRESETS.noir.glass).toEqual({
+      blur: '26px',
+      saturation: '165%',
+      rimShadow: 'inset 0 1px 0 oklch(100% 0 0 / 0.24)'
+    });
+  });
+});

@@ -1,0 +1,45 @@
+{
+  "name": "@zuari/presets",
+  "version": "0.1.0",
+  "description": "Modular Japanese Minimal & Anime-Artistic UI/UX Design, Lightweight Elevations, and Keyframe Animation Presets for Zuari",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@zuari/signals": "workspace:*",
+    "@zuari/tokens": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./aesthetics": {
+      "types": "./dist/aesthetics.d.ts",
+      "import": "./dist/aesthetics.js"
+    },
+    "./animations": {
+      "types": "./dist/animations.d.ts",
+      "import": "./dist/animations.js"
+    },
+    "./division": {
+      "types": "./dist/division.d.ts",
+      "import": "./dist/division.js"
+    },
+    "./persistence": {
+      "types": "./dist/persistence.d.ts",
+      "import": "./dist/persistence.js"
+    },
+    "./templates": {
+      "types": "./dist/templates/index.d.ts",
+      "import": "./dist/templates/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}

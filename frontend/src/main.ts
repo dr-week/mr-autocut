@@ -1,29 +1,21 @@
 import './styles.css';
 import { effect } from '@zuari/signals';
-import { initStudio, toastSig } from './state';
-import { createTopBar } from './sections/TopBar';
-import { createInspectorPanel } from './sections/InspectorPanel';
-import { createMonitorPanel } from './sections/MonitorPanel';
-import { createBridgePanel } from './sections/BridgePanel';
-import { createTimelinePanel } from './sections/TimelinePanel';
+import { initStudio, layoutSig, toastSig } from './state';
+import { createTopBar } from './sections/topbar';
+import { createCommandPalette } from './sections/palette';
+import { createInspectorPanel } from './sections/inspector';
+import { createMonitorPanel } from './sections/monitor';
+import { createBridgePanel } from './sections/bridge';
+import { createTimelinePanel } from './sections/timeline';
 
-const root = document.getElementById('app')!;
 const shell = document.createElement('div');
-shell.className = 'studio-shell';
-
 const grid = document.createElement('div');
 grid.className = 'studio-grid';
 grid.append(createInspectorPanel(), createMonitorPanel(), createBridgePanel());
-
 const toast = document.createElement('div');
 toast.className = 'toast';
-effect(() => {
-  const msg = toastSig.value;
-  toast.textContent = msg;
-  toast.classList.toggle('visible', Boolean(msg));
-});
-
-shell.append(createTopBar(), grid, createTimelinePanel(), toast);
-root.appendChild(shell);
-
+effect(() => { shell.className = `studio-shell mode-${layoutSig.value}`; });
+effect(() => { toast.textContent = toastSig.value; toast.classList.toggle('visible', Boolean(toastSig.value)); });
+shell.append(createTopBar(), grid, createTimelinePanel(), createCommandPalette(), toast);
+document.getElementById('app')!.appendChild(shell);
 initStudio();

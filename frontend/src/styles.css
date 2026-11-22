@@ -209,3 +209,32 @@ body {
   transition: all 0.2s ease; pointer-events: none;
 }
 .toast.visible { opacity: 1; transform: translateY(0); }
+
+/* Adobe UXP Dock / Mini-HUD Layout Modes */
+.mode-dock { max-width: 380px; }
+.mode-dock .studio-grid { grid-template-columns: 1fr; }
+.mode-dock .monitor { display: none; }
+.mode-hud .studio-grid, .mode-hud .timeline-panel { display: none; }
+
+.mode-switch { display: inline-flex; border: 1px solid var(--border); border-radius: 9px; overflow: hidden; }
+.mode-switch button { background: transparent; border: none; color: var(--muted); font-size: 11px; padding: 5px 8px; cursor: pointer; }
+.mode-switch button.active { background: rgba(56, 189, 248, 0.18); color: var(--text); }
+
+/* Mr Horse FX Hover Previews & Favorites */
+.fx-head { display: flex; justify-content: space-between; align-items: center; }
+.fav-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; }
+.fav-btn.on { color: var(--amber); }
+.fx-card { transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease; }
+.fx-card.fx-zoom:hover { transform: scale(1.03); border-color: var(--accent); }
+.fx-card.fx-whip:hover { transform: translateX(4px); border-color: var(--indigo); }
+.fx-card.fx-leak:hover { box-shadow: inset 0 0 24px rgba(251, 191, 36, 0.25); border-color: var(--amber); }
+.fx-card.fx-flash:hover { box-shadow: inset 0 0 24px rgba(255, 255, 255, 0.22); }
+
+/* Excalibur Cmd+K Command Palette */
+.palette-backdrop { position: fixed; inset: 0; background: rgba(2, 4, 8, 0.72); backdrop-filter: blur(8px); display: none; place-items: start center; padding-top: 12vh; z-index: 99; }
+.palette-backdrop.open { display: grid; }
+.palette-box { width: min(520px, 92vw); background: #0d111a; border: 1px solid var(--border-active); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65); }
+.palette-box input { width: 100%; padding: 14px 16px; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-size: 14px; outline: none; }
+.pal-item { width: 100%; display: flex; justify-content: space-between; padding: 11px 16px; background: transparent; border: none; color: var(--text); cursor: pointer; text-align: left; }
+.pal-item:hover { background: rgba(56, 189, 248, 0.12); }
+.pal-item small { color: var(--muted); font-size: 11px; }

@@ -1,0 +1,29 @@
+{
+  "name": "zuari-framework-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "pnpm --filter @zuari/playground dev",
+    "audit:modules": "node scripts/dev/audit-modules.mjs",
+    "docs:search": "node scripts/dev/search-docs.mjs",
+    "research:reuse": "node scripts/dev/research-reuse.mjs",
+    "zuari:pkg": "node scripts/zuari-pkg.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "sync:rules": "node scripts/sync-ai-rules.mjs",
+    "new:module": "node scripts/new-module.mjs",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.3",
+    "@vitest/coverage-v8": "^5.0.5",
+    "happy-dom": "^21.0.3",
+    "typescript": "^5.8.0",
+    "vitest": "^5.0.5"
+  }
+}

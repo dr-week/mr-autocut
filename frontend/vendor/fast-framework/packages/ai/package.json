@@ -1,0 +1,26 @@
+{
+  "name": "@zuari/ai",
+  "version": "0.1.0",
+  "description": "WebNN & On-Device AI Primitives (window.ai) with Zero-Latency ChildPart Token Streaming for Zuari",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@zuari/signals": "workspace:*",
+    "@zuari/dom": "workspace:*",
+    "@zuari/glyphs": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}

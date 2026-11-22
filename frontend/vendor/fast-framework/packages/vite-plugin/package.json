@@ -1,0 +1,27 @@
+{
+  "name": "@zuari/vite-plugin",
+  "version": "0.1.0",
+  "description": "Official Vite plugin for Zuari (Build-time template pre-compilation & hot module replacement)",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@zuari/signals": "workspace:*"
+  },
+  "peerDependencies": {
+    "vite": "^5.0.0 || ^6.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}
