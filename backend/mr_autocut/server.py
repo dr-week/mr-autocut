@@ -233,3 +233,12 @@ def assets_download(url: str, filename: str, dest_dir: str | None = None):
     from .multipass.fetch import download_asset
     saved = download_asset(url=url, filename=filename, dest_dir=dest_dir)
     return {"saved_path": str(saved), "size_bytes": saved.stat().st_size}
+
+
+@app.get("/api/updater/check")
+def updater_check():
+    from .updater import APP_VERSION, UpdateStatus, check_for_updates
+    try:
+        return check_for_updates()
+    except Exception:
+        return UpdateStatus(current_version=APP_VERSION, latest_version=APP_VERSION, update_available=False, release_url="https://github.com/dr-week/mr-autocut/releases")

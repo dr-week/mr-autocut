@@ -237,3 +237,18 @@ def test_free_stock_search_and_download(tmp_path: Path, monkeypatch):
     dl = client.post("/api/assets/download", params={"url": "https://ex/v.jpg", "filename": "neon.jpg", "dest_dir": str(tmp_path)}).json()
     assert dl["size_bytes"] == len(b"fake-media-bytes")
     assert (tmp_path / "neon.jpg").is_file()
+
+
+def test_github_auto_updater_check(monkeypatch):
+    import json
+    from mr_autocut import updater
+
+    class _DummyResp:
+        def __enter__(self): return self
+        def __exit__(self, *a): pass
+        def read(self): return json.dumps({"tag_name": "v0.3.0", "html_url": "https://github.com/dr-week/mr-autocut/releases/tag/v0.3.0"}).encode()
+
+    monkeypatch.setattr(updater.urllib.request, "urlopen", lambda req, timeout=8: _DummyResp())
+    res = client.get("/api/updater/check").json()
+    assert res["update_available"] is True
+    assert res["latest_version"] == "0.3.0"

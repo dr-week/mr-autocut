@@ -16,7 +16,15 @@ A futuristic, minimal, **120 FPS** companion extension for [FilmCraft](https://g
 - **Free Asset Hub & Google Flow**: Built-in search & 1-click download from **Openverse CC0**, **Pexels**, **Pixabay**, **Freesound**, plus a 1-click **Google Flow** launcher.
 - **Zero-Cost AI & Colab Learning**: Ready-to-run [`colab/ai_director.ipynb`](colab/ai_director.ipynb) (Whisper + open LLM) and [`colab/train_style_model.ipynb`](colab/train_style_model.ipynb) (`edits.jsonl` → `style_profile.json`).
 
-## Quick Start
+## Windows 1-Click Install (Auto-Installs FFmpeg, `uv` & Desktop Shortcut)
+
+Run in **PowerShell**:
+```powershell
+irm https://raw.githubusercontent.com/dr-week/mr-autocut/main/installer/install.ps1 | iex
+```
+- **Auto-Updates**: MR-AutoCut checks GitHub Releases (`GET /api/updater/check`) automatically whenever a new `v*` tag is published via [`.github/workflows/release.yml`](.github/workflows/release.yml).
+
+## Quick Start (Linux / macOS / Dev)
 
 ```bash
 # Start both FastAPI backend (:8000) and Zuari 120 FPS UI (:5173)
@@ -26,6 +34,8 @@ bash scripts/dev.sh
 bash scripts/verify.sh
 ```
 
-## Free Cloud Hosting & Auto-Failover
-- **Frontend**: Auto-deployed to **GitHub Pages** via [`.github/workflows/pages.yml`](.github/workflows/pages.yml) (also works on Cloudflare Pages / Vercel / Netlify). Works **100% offline/zero-server** via Web Audio API!
-- **Backend**: Deploy [`backend/Dockerfile`](backend/Dockerfile) for free on **Hugging Face Spaces**, **Render**, or **Koyeb**, then click the engine status pill in the TopBar to connect.
+## Free Everywhere Hosting & Auto-Failover
+1. **Local (`127.0.0.1:8000`)** — Full `filmcraft-cli --bridge`, local folders, fast FFmpeg.
+2. **Hugging Face Spaces / Render / Koyeb** — Free Docker tiers via [`backend/Dockerfile`](backend/Dockerfile) (click the engine pill in the TopBar to paste your Space URL).
+3. **Google Colab T4 + Gemini Free Tier** — [`colab/ai_director.ipynb`](colab/ai_director.ipynb) & [`colab/train_style_model.ipynb`](colab/train_style_model.ipynb).
+4. **GitHub Pages (Zero-Server Fallback)** — Live at https://dr-week.github.io/mr-autocut/ using native Web Audio API.

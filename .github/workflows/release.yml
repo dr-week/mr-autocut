@@ -1,0 +1,32 @@
+name: Release — Windows Bundle & Auto-Update
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build Zuari Frontend
+        working-directory: frontend
+        run: npm install --no-audit --no-fund && npm run build
+      - name: Package Windows Release Zip
+        run: |
+          mkdir -p dist_pkg
+          cp -r backend installer frontend/dist README.md dist_pkg/
+          (cd dist_pkg && zip -r ../MR-AutoCut-windows.zip .)
+          sha256sum MR-AutoCut-windows.zip > SHA256SUMS.txt
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            MR-AutoCut-windows.zip
+            SHA256SUMS.txt
