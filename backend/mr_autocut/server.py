@@ -198,3 +198,22 @@ def color_match(clip_ids: list[int], reference_seconds: float = 0.5):
     import json
     lines = [json.dumps({"id": "lumetri.applyMatch", "params": {"clip": cid, "referenceTime": int(reference_seconds * 254016000000), "faceDetection": True}}) for cid in clip_ids]
     return {"command_count": len(lines), "jsonl": "\n".join(lines) + "\n"}
+
+
+@app.get("/api/assets/sources")
+def assets_sources():
+    from .multipass import FREE_ASSET_SOURCES
+    return {"sources": FREE_ASSET_SOURCES}
+
+
+@app.get("/api/assets/flow-prompt")
+def assets_flow_prompt(topic: str, aspect: str = "9:16"):
+    from .multipass import build_flow_prompt
+    return build_flow_prompt(topic=topic, aspect=aspect)
+
+
+@app.post("/api/multipass/improve")
+def multipass_improve(segments: list[dict], max_passes: int = 3):
+    from .engine import Segment
+    from .multipass import run_multipass_improve
+    return {"passes": run_multipass_improve([Segment(**s) for s in segments], max_passes=max_passes)}

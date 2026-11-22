@@ -197,3 +197,21 @@ def test_qubo_reel_optimizer_and_filmcraft_color_match():
     match = client.post("/api/color/match", params={"reference_seconds": 1.0}, json=[101, 102, 103]).json()
     assert match["command_count"] == 3
     assert "lumetri.applyMatch" in match["jsonl"]
+
+
+def test_multipass_auto_improve_and_free_asset_sources():
+    srcs = client.get("/api/assets/sources").json()["sources"]
+    assert any(s["id"] == "google-flow" for s in srcs)
+    assert any(s["id"] == "pexels" for s in srcs)
+
+    fp = client.get("/api/assets/flow-prompt", params={"topic": "neon cyber studio", "aspect": "9:16"}).json()
+    assert "labs.google" in fp["open_url"] and "neon cyber studio" in fp["prompt"]
+
+    raw_segs = [
+        {"index": i + 1, "start": i * 4.0, "end": (i + 1) * 4.0, "duration": 4.0, "kind": "speech", "scale": 1.0, "enabled": True}
+        for i in range(4)
+    ]
+    res = client.post("/api/multipass/improve", params={"max_passes": 3}, json=raw_segs).json()
+    assert len(res["passes"]) == 3
+    assert res["passes"][-1]["score"] > res["passes"][0]["score"]
+    assert res["passes"][-1]["score"] == 100
