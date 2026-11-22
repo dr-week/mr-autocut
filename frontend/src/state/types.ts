@@ -1,5 +1,5 @@
 export type LayoutMode = 'studio' | 'dock' | 'hud';
-export type InspectorTab = 'autocut' | 'assets' | 'fx' | 'captions' | 'director';
+export type InspectorTab = 'autocut' | 'assets' | 'fx' | 'color' | 'captions' | 'director';
 export type FxCategory = 'All' | 'Camera' | 'Transition' | 'Light Leak' | 'SFX' | 'Color';
 
 export interface SequenceSpec { width: number; height: number; fps: number; fit_mode: 'fill' | 'fit'; }

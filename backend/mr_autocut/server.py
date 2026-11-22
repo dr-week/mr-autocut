@@ -170,3 +170,16 @@ def learning_profile(profile: dict) -> LearningStats:
     from .learning import STYLE_PROFILE_PATH
     STYLE_PROFILE_PATH.write_text(json.dumps(profile, indent=2), encoding="utf-8")
     return get_learning_stats()
+
+
+@app.post("/api/color/analyze")
+def color_analyze(media_path: str, timestamp: float = 0.5):
+    from .color import auto_balance_clip, detect_color_science
+    return {"science": detect_color_science(media_path), "grade": auto_balance_clip(media_path, timestamp)}
+
+
+@app.post("/api/color/cube")
+def color_cube(grade: dict, title: str = "MR-AutoCut Grade", size: int = 17):
+    from fastapi.responses import PlainTextResponse
+    from .color import ColorGrade, generate_cube_lut
+    return PlainTextResponse(generate_cube_lut(ColorGrade(**grade), title=title, size=size), media_type="text/plain")

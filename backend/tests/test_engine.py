@@ -172,3 +172,14 @@ def test_phase2_audio_beats_ducking_and_phase3_style_profile(tmp_path: Path):
     prof = client.post("/api/learning/profile", json={"avg_shot_sec": 1.4, "punch_in_probability": 0.5}).json()
     assert prof["style_profile_loaded"] is True
     assert prof["style_profile"]["avg_shot_sec"] == 1.4
+
+
+def test_color_science_auto_balance_and_cube_lut(tmp_path: Path):
+    clip = _make_synthetic_clip(tmp_path / "grade.mp4")
+    res = client.post("/api/color/analyze", params={"media_path": str(clip), "timestamp": 0.5}).json()
+    assert res["science"]["color_space"]
+    assert "lift" in res["grade"] and "gamma" in res["grade"] and "gain" in res["grade"]
+
+    cube = client.post("/api/color/cube", json={"grade": res["grade"]})
+    assert cube.status_code == 200
+    assert "LUT_3D_SIZE 17" in cube.text

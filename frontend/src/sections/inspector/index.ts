@@ -4,11 +4,12 @@ import type { InspectorTab } from '../../state';
 import { renderAutoCutTab } from './tab_autocut';
 import { renderAssetsTab } from './tab_assets';
 import { renderFxTab } from './tab_fx';
+import { renderColorTab } from './tab_color';
 import { renderCaptionsTab } from './tab_captions';
 import { renderDirectorTab } from './tab_director';
 
-const TABS: [InspectorTab, string][] = [['autocut', 'Auto-Cut'], ['assets', 'Assets'], ['fx', 'FX'], ['captions', 'Captions'], ['director', 'AI']];
-const RENDERERS: Record<InspectorTab, (el: HTMLElement) => void> = { autocut: renderAutoCutTab, assets: renderAssetsTab, fx: renderFxTab, captions: renderCaptionsTab, director: renderDirectorTab };
+const TABS: [InspectorTab, string][] = [['autocut', 'Auto-Cut'], ['assets', 'Assets'], ['fx', 'FX'], ['color', 'Color'], ['captions', 'Captions'], ['director', 'AI']];
+const RENDERERS: Record<InspectorTab, (el: HTMLElement) => void> = { autocut: renderAutoCutTab, assets: renderAssetsTab, fx: renderFxTab, color: renderColorTab, captions: renderCaptionsTab, director: renderDirectorTab };
 
 export function createInspectorPanel(): HTMLElement {
   const el = document.createElement('aside');
