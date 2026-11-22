@@ -2,14 +2,15 @@ import { activeApiSig, apiUrl, ic, jsonlSig, notify, refreshScript, segmentsSig 
 import { CURATED_YT_PACK } from './yt_presets';
 
 export function renderYtHarvester(): string {
-  return `<div class="control"><input id="yt-url" type="text" placeholder="YouTube URL (blank = 7-pack)..." /></div><div class="row-2"><select id="yt-kind"><option value="light_leak">Light Leak (Screen)</option><option value="film_burn_sfx">Burn+SFX (Screen)</option><option value="vfx_sfx_pack">VFX+SFX (Add)</option><option value="paper_texture">Paper (Multiply)</option><option value="grain">Grain (Overlay)</option></select><button id="yt-harvest" class="btn-primary" title="Harvest Clean Cuts">${ic('scissors', 12)} Slice</button></div><div id="yt-list" class="mini-note">${CURATED_YT_PACK.slice(0, 4).map((i) => `<span class="pill">${ic('play', 10)} ${i.id.slice(0, 6)} · ${i.blend.filmcraft}</span>`).join(' ')}</div>`;
+  const opts = CURATED_YT_PACK.map((i, idx) => `<option value="${idx}">${i.name} (${i.blend.filmcraft} · ${i.start}s-${i.end}s)</option>`).join('');
+  return `<div class="control"><label>${ic('film', 12)} 44 Sliced YouTube Transitions</label><select id="yt-preset-sel" style="width:100%;padding:7px;border-radius:8px;border:1px solid var(--border);background:oklch(0% 0 0/.4);color:var(--text);font-size:11px;">${opts}</select></div><div class="row-2"><input id="yt-url" type="text" placeholder="Or paste YouTube transition URL..." /><button id="yt-harvest" class="btn-primary" title="Slice & Apply Transition">${ic('scissors', 12)} Apply</button></div>`;
 }
 export function bindYtHarvester(body: HTMLElement) {
   body.querySelector<HTMLButtonElement>('#yt-harvest')!.onclick = async () => {
-    const url = body.querySelector<HTMLInputElement>('#yt-url')!.value.trim(), kind = body.querySelector<HTMLSelectElement>('#yt-kind')!.value;
-    const res = activeApiSig.value === 'static-demo' ? { items: CURATED_YT_PACK } : await fetch(apiUrl(`/api/youtube-fx/harvest?kind=${kind}${url ? `&url=${encodeURIComponent(url)}` : ''}`), { method: 'POST' }).then((r) => r.json()).catch(() => ({ items: CURATED_YT_PACK }));
-    body.querySelector('#yt-list')!.innerHTML = (res.items || CURATED_YT_PACK).slice(0, 5).map((i: any) => `<span class="pill">${ic('play', 10)} ${i.id.slice(0, 6)} · ${i.blend.filmcraft}</span>`).join(' ');
-    segmentsSig.value = segmentsSig.value.map((s, idx) => (idx % 2 === 1 ? { ...s, light_leak: true, transition: kind, sfx: 'whoosh' } : s));
-    await refreshScript(); jsonlSig.value = `${jsonlSig.value}\n{"id":"timeline.place","params":{"track":"V2","audioTrack":"A2","seconds":1.5,"insert":false}}\n{"id":"effects.setParam","params":{"effect":"opacity","param":"blend","value":"${(res.items?.[0]?.blend?.filmcraft) || 'Screen'}"}}`.trim(); notify(`Sliced ${(res.items || CURATED_YT_PACK).length} YT FX`);
+    const url = body.querySelector<HTMLInputElement>('#yt-url')!.value.trim(), selIdx = Number(body.querySelector<HTMLSelectElement>('#yt-preset-sel')!.value || 0), chosen = CURATED_YT_PACK[selIdx] || CURATED_YT_PACK[0];
+    const res = !url || activeApiSig.value === 'static-demo' ? { items: [chosen] } : await fetch(apiUrl(`/api/youtube-fx/harvest?kind=${chosen.kind}&url=${encodeURIComponent(url)}`), { method: 'POST' }).then((r) => r.json()).catch(() => ({ items: [chosen] }));
+    const it = res.items?.[0] || chosen;
+    segmentsSig.value = segmentsSig.value.map((s, idx) => (idx % 2 === 1 ? { ...s, light_leak: true, transition: it.kind, sfx: 'whoosh' } : s));
+    await refreshScript(); jsonlSig.value = `${jsonlSig.value}\n{"id":"timeline.place","params":{"track":"V2","audioTrack":"A2","seconds":1.5,"insert":false}}\n{"id":"effects.setParam","params":{"effect":"opacity","param":"blend","value":"${it.blend.filmcraft}"}}`.trim(); notify(`${it.name || it.id} (${it.blend.filmcraft})`);
   };
 }

@@ -87,6 +87,28 @@ body {
   color: #05070b; font-weight: 700; font-size: 11px; cursor: pointer;
 }
 
+.sys-pop { position: relative; }
+.sys-pop summary { list-style: none; }
+.sys-pop summary::-webkit-details-marker { display: none; }
+.sys-menu {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 130;
+  min-width: 210px; padding: 10px; border-radius: 12px;
+  background: oklch(15% 0.02 260 / 0.96); border: 1px solid var(--accent);
+  backdrop-filter: blur(24px); display: flex; flex-direction: column; gap: 6px;
+  box-shadow: 0 20px 50px oklch(0% 0 0 / 0.75);
+}
+
+details.sub-box {
+  margin-top: 6px; border: 1px solid var(--border); border-radius: 10px;
+  background: oklch(0% 0 0 / 0.24); padding: 6px 8px;
+}
+details.sub-box summary {
+  list-style: none; cursor: pointer; font-size: 11px; color: var(--muted);
+  display: flex; align-items: center; gap: 6px; font-weight: 600;
+}
+details.sub-box summary::-webkit-details-marker { display: none; }
+details.sub-box .sub-body { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+
 /* Fluid DPI-Adaptive Filmora / Premiere Card Grid (Zero Margin Waste) */
 .studio-grid {
   display: grid;

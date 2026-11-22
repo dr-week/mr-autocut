@@ -1,9 +1,9 @@
 export const CURATED_YT_PACK = [
-  { id: 'C9D6jiz4ILk_01', kind: 'retro_film', start: 1.64, end: 2.94, blend: { filmcraft: 'Screen' } },
-  { id: 'Qhja8wHX-o0_01', kind: 'light_leak', start: 0.80, end: 1.88, blend: { filmcraft: 'Screen' } },
-  { id: 'tHA1uAOkbsY_01', kind: 'film_overlay', start: 5.36, end: 6.66, blend: { filmcraft: 'Screen' } },
-  { id: 'zXTJrsCztu0_01', kind: 'film_burn_sfx', start: 5.15, end: 6.45, blend: { filmcraft: 'Screen' } },
-  { id: 'Ly1Hdjrtj2s_01', kind: 'paper_texture', start: 0.75, end: 2.05, blend: { filmcraft: 'Multiply' } },
-  { id: 'b-jt77qrRoA_01', kind: 'light_leak_4k', start: 2.50, end: 3.73, blend: { filmcraft: 'Screen' } },
-  { id: 'n4j77OIbmmw_01', kind: 'vfx_sfx_pack', start: 6.40, end: 7.70, blend: { filmcraft: 'Linear Dodge (Add)' } },
+  { id: 'C9D6jiz4ILk_01', name: 'Super 8mm Sprocket Burn #01', kind: 'retro_film', start: 1.74, end: 2.84, blend: { filmcraft: 'Screen' } }, { id: 'C9D6jiz4ILk_02', name: 'Super 8mm Sprocket Burn #02', kind: 'retro_film', start: 3.16, end: 4.26, blend: { filmcraft: 'Screen' } },
+  { id: 'C9D6jiz4ILk_03', name: 'Super 8mm Sprocket Burn #03', kind: 'retro_film', start: 4.75, end: 5.85, blend: { filmcraft: 'Screen' } }, { id: 'Qhja8wHX-o0_01', name: 'Optical Amber Flare + Whoosh #01', kind: 'light_leak', start: 0.90, end: 1.86, blend: { filmcraft: 'Screen' } },
+  { id: 'Qhja8wHX-o0_02', name: 'Optical Amber Flare + Whoosh #02', kind: 'light_leak', start: 2.31, end: 3.41, blend: { filmcraft: 'Screen' } }, { id: 'tHA1uAOkbsY_01', name: '35mm Kodak Matte Leader #01', kind: 'film_overlay', start: 5.50, end: 6.56, blend: { filmcraft: 'Screen' } },
+  { id: 'tHA1uAOkbsY_02', name: '35mm Kodak Matte Leader #02', kind: 'film_overlay', start: 6.71, end: 7.81, blend: { filmcraft: 'Screen' } }, { id: 'zXTJrsCztu0_01', name: 'Cyan-Magenta Flash + SFX #01', kind: 'film_burn_sfx', start: 5.50, end: 6.35, blend: { filmcraft: 'Screen' } },
+  { id: 'zXTJrsCztu0_02', name: 'Cyan-Magenta Flash + SFX #02', kind: 'film_burn_sfx', start: 6.50, end: 7.60, blend: { filmcraft: 'Screen' } }, { id: 'Ly1Hdjrtj2s_01', name: 'Crumpled Paper Unfold #01', kind: 'paper_texture', start: 0.57, end: 1.67, blend: { filmcraft: 'Multiply' } },
+  { id: 'b-jt77qrRoA_01', name: '4K Anamorphic Warm Leak #01', kind: 'light_leak_4k', start: 2.49, end: 3.59, blend: { filmcraft: 'Screen' } }, { id: 'b-jt77qrRoA_02', name: '4K Anamorphic Warm Leak #02', kind: 'light_leak_4k', start: 4.41, end: 5.51, blend: { filmcraft: 'Screen' } },
+  { id: 'n4j77OIbmmw_01', name: 'Prism Shutter Glitch + Riser #01', kind: 'vfx_sfx_pack', start: 5.50, end: 6.51, blend: { filmcraft: 'Linear Dodge (Add)' } }, { id: 'n4j77OIbmmw_02', name: 'Prism Shutter Glitch + Riser #02', kind: 'vfx_sfx_pack', start: 6.67, end: 7.77, blend: { filmcraft: 'Linear Dodge (Add)' } },
 ];

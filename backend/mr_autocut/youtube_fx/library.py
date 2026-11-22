@@ -1,4 +1,4 @@
-"""List or harvest the curated YouTube transition library."""
+"""List or harvest the curated YouTube transition library (all distinct cuts)."""
 import json
 from .download import YT_CACHE
 from .refs import YOUTUBE_REFS
@@ -9,9 +9,10 @@ MANIFEST = YT_CACHE / "manifest.json"
 def get_harvested_library() -> list[dict]:
     return json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.is_file() else []
 
-def harvest_curated_pack(limit_refs: int = 7, max_clips_per_ref: int = 2) -> list[dict]:
+def harvest_curated_pack(limit_refs: int = 7, max_clips_per_ref: int = 8) -> list[dict]:
     all_items: list[dict] = []
     for ref in YOUTUBE_REFS[:limit_refs]:
-        all_items.extend(harvest_transitions(ref["url"], ref["id"], ref["kind"], ref["trim_head"], ref["trim_tail"], max_clips_per_ref))
+        for it in harvest_transitions(ref["url"], ref["id"], ref["kind"], ref["trim_head"], ref["trim_tail"], max_clips_per_ref):
+            all_items.append({**it, "name": f"{ref.get('name', ref['kind'])} #{it['id'].split('_')[-1]}"})
     MANIFEST.write_text(json.dumps(all_items, indent=2), encoding="utf-8")
     return all_items

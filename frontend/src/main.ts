@@ -1,6 +1,6 @@
-import './styles.css';
+import './styles.scss';
 import { initStudio } from './state';
 import { createShell } from './shell';
 
-document.getElementById('app')!.appendChild(createShell());
+document.querySelector<HTMLDivElement>('#app')!.append(createShell());
 initStudio();
