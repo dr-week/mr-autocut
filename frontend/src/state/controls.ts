@@ -15,6 +15,7 @@ export const jsonlSig = signal<string>('');
 export const cliCmdSig = signal<string>('');
 export const toastSig = signal<string>('');
 export const loggedEditsSig = signal<number>(0);
+export const colorFilterSig = signal<string>('none');
 
 export const statsSig = computed(() => {
   const dur = sourceDurationSig.value;

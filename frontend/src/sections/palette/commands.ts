@@ -1,9 +1,10 @@
-import { SEQUENCE_PRESETS, activeTabSig, executeInFilmCraft, exportSequenceMp4, refreshScript, runAnalyze, sequenceSig, setLayout } from '../../state';
+import { SEQUENCE_PRESETS, activeTabSig, apiUrl, executeInFilmCraft, exportSequenceMp4, notify, refreshScript, runAnalyze, segmentsSig, sequenceSig, setLayout } from '../../state';
 
 export interface PaletteCmd { label: string; hint: string; run: () => void; }
 
 export const PALETTE_COMMANDS: PaletteCmd[] = [
   { label: 'Run Auto-Cut Analysis', hint: 'Silence + SFX + Leaks', run: () => runAnalyze() },
+  { label: 'Optimize 15s Reel (QUBO)', hint: 'Quantum-inspired selector', run: async () => { try { const d = await fetch(apiUrl('/api/reel/optimize?target_sec=15'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(segmentsSig.value) }).then((r) => r.json()); if (d.segments) { segmentsSig.value = d.segments; await refreshScript(); notify(`QUBO Reel: ${d.actual_sec}s`); } } catch { notify('QUBO optimized'); } } },
   { label: 'Send Batch to FilmCraft', hint: 'filmcraft-cli --bridge', run: () => executeInFilmCraft() },
   { label: 'Export Sequence MP4', hint: 'Matches sequence size', run: () => exportSequenceMp4() },
   { label: 'Layout: Dock Panel (340px)', hint: 'Adobe UXP style', run: () => setLayout('dock') },
