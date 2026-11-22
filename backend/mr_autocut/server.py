@@ -149,3 +149,24 @@ def learning_log(delta: EditDelta) -> LearningStats:
 @app.get("/api/learning/stats", response_model=LearningStats)
 def learning_stats() -> LearningStats:
     return get_learning_stats()
+
+
+@app.post("/api/audio/beats")
+def audio_beats(media_path: str, duration: float = 10.0, sensitivity: float = 0.72):
+    from .audio import detect_beats_ffmpeg
+    return detect_beats_ffmpeg(media_path, duration=duration, sensitivity=sensitivity)
+
+
+@app.post("/api/audio/ducking")
+def audio_ducking(segments: list[dict], duck_db: float = -12.0):
+    from .audio import build_ducking_curve
+    from .engine import Segment
+    return build_ducking_curve([Segment(**s) for s in segments], duck_db=duck_db)
+
+
+@app.post("/api/learning/profile", response_model=LearningStats)
+def learning_profile(profile: dict) -> LearningStats:
+    import json
+    from .learning import STYLE_PROFILE_PATH
+    STYLE_PROFILE_PATH.write_text(json.dumps(profile, indent=2), encoding="utf-8")
+    return get_learning_stats()

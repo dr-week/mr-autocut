@@ -156,3 +156,19 @@ def test_project_folder_scan_director_learning_and_filmcraft_execute(tmp_path: P
     ).json()
     assert "filmcraft-cli" in ex["cli_invocation"]
     assert ex["exit_code"] in (0, 1)
+
+
+def test_phase2_audio_beats_ducking_and_phase3_style_profile(tmp_path: Path):
+    clip = _make_synthetic_clip(tmp_path / "beats.mp4")
+    b = client.post("/api/audio/beats", params={"media_path": str(clip), "duration": 4.0}).json()
+    assert b["bpm_estimate"] > 0
+
+    duck = client.post(
+        "/api/audio/ducking",
+        json=[{"index": 1, "start": 0.5, "end": 2.0, "duration": 1.5, "enabled": True}],
+    ).json()
+    assert len(duck) == 1 and duck[0]["volume_db"] == -12.0
+
+    prof = client.post("/api/learning/profile", json={"avg_shot_sec": 1.4, "punch_in_probability": 0.5}).json()
+    assert prof["style_profile_loaded"] is True
+    assert prof["style_profile"]["avg_shot_sec"] == 1.4
