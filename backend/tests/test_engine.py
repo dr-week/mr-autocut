@@ -286,4 +286,16 @@ def test_vfx_prompt_script_movements_and_filmora_package(tmp_path: Path):
     mov = client.post("/api/vfx/movements", params={"media_path": str(clip), "top_k": 3}).json()
     assert len(mov["movements"]) >= 1
 
+    cln = client.post(
+        "/api/reference/clone",
+        params={"ref_source": str(clip), "client_brief": "Event car drop", "pacing": 1.2},
+        json=["raw_01.mp4", "raw_02.mp4"],
+    ).json()
+    assert len(cln["segments"]) >= 2
+    assert cln["filmora_package"]["mode"] == "reference_clone"
+
+    lan = client.get("/api/lan/info").json()
+    assert "android_remote_url" in lan and len(lan["extensions"]) == 3
+
+
 

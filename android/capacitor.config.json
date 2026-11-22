@@ -1,0 +1,9 @@
+{
+  "appId": "com.drweek.mrautocut.mobile",
+  "appName": "MR-AutoCut Mobile",
+  "webDir": "../frontend/dist",
+  "server": {
+    "cleartext": true,
+    "allowNavigation": ["*"]
+  }
+}

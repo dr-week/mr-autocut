@@ -1,7 +1,7 @@
-"""YouTube Transition Harvester, Auto-Search, Best-Movement & Gen-Z VFX routes."""
+"""YouTube Harvester, Reference Cloner, LAN Remote & Gen-Z VFX routes."""
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
-from ..youtube_fx import BLEND_MODES, YOUTUBE_REFS, VfxPlan, build_vfx_plan, find_best_movements, get_harvested_library, harvest_curated_pack, harvest_transitions, search_youtube_fx
+from ..youtube_fx import BLEND_MODES, YOUTUBE_REFS, VfxPlan, build_vfx_plan, clone_reference_with_raw, find_best_movements, get_harvested_library, get_lan_and_launcher_info, harvest_curated_pack, harvest_transitions, search_youtube_fx
 from ..youtube_fx.download import YT_CACHE
 
 router = APIRouter()
@@ -11,4 +11,5 @@ router.add_api_route("/api/youtube-fx/stream/{clip_id}", lambda clip_id: FileRes
 def _yt_srch(q: str = "light leak transition", limit: int = 4): return {"query": q, "items": search_youtube_fx(q, limit=limit)}
 def _vfx(prompt: str = "", script_text: str = "") -> VfxPlan: return build_vfx_plan(prompt=prompt, script_text=script_text)
 def _mov(media_path: str, top_k: int = 4): return {"movements": find_best_movements(media_path, top_k=top_k)}
-router.add_api_route("/api/youtube-fx/search", _yt_srch, methods=["GET"]); router.add_api_route("/api/vfx/plan", _vfx, response_model=VfxPlan, methods=["POST"]); router.add_api_route("/api/vfx/movements", _mov, methods=["POST"])
+def _cln(ref_source: str, client_brief: str = "Event highlight", pacing: float = 1.0, raw_clips: list[str] | None = None): return clone_reference_with_raw(ref_source, raw_clips or [], client_brief, pacing)
+router.add_api_route("/api/youtube-fx/search", _yt_srch, methods=["GET"]); router.add_api_route("/api/vfx/plan", _vfx, response_model=VfxPlan, methods=["POST"]); router.add_api_route("/api/vfx/movements", _mov, methods=["POST"]); router.add_api_route("/api/reference/clone", _cln, methods=["POST"]); router.add_api_route("/api/lan/info", get_lan_and_launcher_info, methods=["GET"])
