@@ -217,3 +217,19 @@ def multipass_improve(segments: list[dict], max_passes: int = 3):
     from .engine import Segment
     from .multipass import run_multipass_improve
     return {"passes": run_multipass_improve([Segment(**s) for s in segments], max_passes=max_passes)}
+
+
+@app.get("/api/assets/search")
+def assets_search(q: str, source: str = "openverse", orientation: str = "landscape", limit: int = 6):
+    from .multipass.fetch import search_free_assets
+    try:
+        return {"items": search_free_assets(q, source=source, orientation=orientation, limit=limit)}
+    except Exception as exc:
+        return {"items": [], "error": str(exc)}
+
+
+@app.post("/api/assets/download")
+def assets_download(url: str, filename: str, dest_dir: str | None = None):
+    from .multipass.fetch import download_asset
+    saved = download_asset(url=url, filename=filename, dest_dir=dest_dir)
+    return {"saved_path": str(saved), "size_bytes": saved.stat().st_size}

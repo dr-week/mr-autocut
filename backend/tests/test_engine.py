@@ -215,3 +215,25 @@ def test_multipass_auto_improve_and_free_asset_sources():
     assert len(res["passes"]) == 3
     assert res["passes"][-1]["score"] > res["passes"][0]["score"]
     assert res["passes"][-1]["score"] == 100
+
+
+def test_free_stock_search_and_download(tmp_path: Path, monkeypatch):
+    from mr_autocut.multipass import fetch as mf
+
+    monkeypatch.setattr(
+        mf,
+        "_get_json",
+        lambda url, headers=None: {"results": [{"title": "Neon City", "thumbnail": "https://ex/t.jpg", "url": "https://ex/v.jpg", "license": "cc0"}]},
+    )
+    res = client.get("/api/assets/search", params={"q": "neon", "source": "openverse"}).json()
+    assert len(res["items"]) == 1 and res["items"][0]["title"] == "Neon City"
+
+    class _DummyResp:
+        def __enter__(self): return self
+        def __exit__(self, *a): pass
+        def read(self): return b"fake-media-bytes"
+
+    monkeypatch.setattr(mf.urllib.request, "urlopen", lambda req, timeout=20: _DummyResp())
+    dl = client.post("/api/assets/download", params={"url": "https://ex/v.jpg", "filename": "neon.jpg", "dest_dir": str(tmp_path)}).json()
+    assert dl["size_bytes"] == len(b"fake-media-bytes")
+    assert (tmp_path / "neon.jpg").is_file()
