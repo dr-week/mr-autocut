@@ -1,0 +1,24 @@
+name: CI — Backend & Zuari Frontend
+
+on:
+  push:
+    branches: ["main", "feat/mr-autocut-mvp"]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - uses: astral-sh/setup-uv@v4
+      - name: Backend Pytest
+        working-directory: backend
+        run: uv sync --extra dev && uv run pytest -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Frontend Build
+        working-directory: frontend
+        run: npm ci && npm run build
