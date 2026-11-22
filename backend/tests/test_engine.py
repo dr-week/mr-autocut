@@ -267,3 +267,23 @@ def test_youtube_fx_refs_blend_and_filmcraft_overlay_jsonl(tmp_path: Path):
     blended = apply_overlay_blend(str(base), str(ov), "screen", 0.85, 640, 360)
     assert Path(blended).is_file()
 
+
+def test_vfx_prompt_script_movements_and_filmora_package(tmp_path: Path):
+    plan = client.post(
+        "/api/vfx/plan",
+        params={
+            "prompt": "Car edit with speed ramp, mask car and add neon saber glow, text behind subject",
+            "script_text": "VELOCITY\nNO CUT EDIT",
+        },
+    ).json()
+    assert plan["speed_curve"] == "velocity_300_40"
+    assert plan["text_behind"] == "VELOCITY"
+    assert "time_remap" in plan["filmcraft_jsonl"]
+    assert "edge_glow" in plan["filmcraft_jsonl"]
+    assert "Filmora" in plan["filmora_package"]["target"]
+
+    clip = _make_synthetic_clip(tmp_path / "action.mp4")
+    mov = client.post("/api/vfx/movements", params={"media_path": str(clip), "top_k": 3}).json()
+    assert len(mov["movements"]) >= 1
+
+

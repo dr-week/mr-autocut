@@ -8,7 +8,9 @@
     "noEmit": true,
     "skipLibCheck": true,
     "paths": {
-      "@zuari/signals": ["./vendor/fast-framework/packages/signals/src/index.ts"]
+      "@zuari/signals": ["./vendor/fast-framework/packages/signals/src/index.ts"],
+      "@zuari/tokens": ["./vendor/fast-framework/packages/tokens/src/index.ts"],
+      "@zuari/presets": ["./vendor/fast-framework/packages/presets/src/index.ts"]
     }
   },
   "include": ["src"]

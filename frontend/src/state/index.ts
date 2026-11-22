@@ -7,3 +7,7 @@ export * from './actions_media';
 export * from './actions_filmcraft';
 export * from './api';
 export * from './updater';
+export * from './zuari_theme';
+export * from './viewport';
+export * from './vfx_sigs';
+export * from './run_vfx';
