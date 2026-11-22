@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MR-AutoCut",
+  "version": "0.3.0",
+  "identifier": "com.drweek.mrautocut",
+  "build": {
+    "frontendDist": "../../frontend/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "MR-AutoCut · FilmCraft Dock",
+        "width": 380,
+        "height": 820,
+        "resizable": true,
+        "alwaysOnTop": true
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all"
+  }
+}

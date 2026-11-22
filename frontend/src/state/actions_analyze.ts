@@ -2,6 +2,7 @@ import { autoLightLeakSig, autoSfxSig, loggedEditsSig, minSilenceSig, paddingSig
 import { busySig, mediaSig, segmentsSig, sequenceSig, sourceDurationSig, statusSig } from './signals';
 import { refreshScript } from './actions_filmcraft';
 import { apiUrl, resolveBackend } from './api';
+import { checkUpdates } from './updater';
 
 const DEMO_SEGMENTS = [
   { index: 1, start: 0.85, end: 4.2, duration: 3.35, kind: 'hook', scale: 1.0, light_leak: false, sfx: 'hit', enabled: true, label: 'Cut 01' },
@@ -12,6 +13,7 @@ const DEMO_SEGMENTS = [
 
 export async function initStudio() {
   await resolveBackend();
+  checkUpdates();
   try {
     const [st, seq, lrn] = await Promise.all([fetch(apiUrl('/api/filmcraft/status')).then((r) => r.json()), fetch(apiUrl('/api/filmcraft/sequence')).then((r) => r.json()), fetch(apiUrl('/api/learning/stats')).then((r) => r.json())]);
     statusSig.value = st; if (seq?.width) sequenceSig.value = seq; if (typeof lrn?.logged_edits === 'number') loggedEditsSig.value = lrn.logged_edits;
